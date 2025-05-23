@@ -811,4 +811,12 @@ textarea:focus {
 .calligraphy-grid {
     grid-template-columns: 1fr;
     gap: 2rem;
+}
+
+textarea[placeholder="선: 선하게 빛나는 당신의 눈빛
+생: 생기 넘치는 당신의 웃음  
+님: 님의 행복을 위해 내가 있을게요"] {
+    placeholder: "선: 선하게 빛나는 당신의 눈빛
+생: 생기 넘치는 당신의 웃음  
+님: 님의 행복을 위해 내가 있을게요";
 } 
