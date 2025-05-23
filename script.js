@@ -50,6 +50,16 @@ async function checkFontLoading() {
             await faithfulnessFont.load();
             document.fonts.add(faithfulnessFont);
             console.log('SSFaithfulness 폰트 로딩 성공');
+            
+            const samulnoriFont = new FontFace('CallifontSamulnori-Medium', 'url(./CallifontSamulnori-Medium.ttf)');
+            await samulnoriFont.load();
+            document.fonts.add(samulnoriFont);
+            console.log('CallifontSamulnori-Medium 폰트 로딩 성공');
+            
+            const rockFont = new FontFace('SSRockRegular', 'url(./SSRockRegular.ttf)');
+            await rockFont.load();
+            document.fonts.add(rockFont);
+            console.log('SSRockRegular 폰트 로딩 성공');
         }
     } catch (error) {
         console.warn('폰트 로딩 실패, 대체 폰트 사용:', error);
@@ -628,10 +638,10 @@ async function createCalligraphyCanvas(text, style) {
                     ctx.font = `${fontSize}px 'SSFlowerRoadRegular', 'UhBeeSeulvely', 'Nanum Brush Script', '나눔손글씨 붓', 'KoPub Batang', 'Noto Serif KR', serif`;
                     break;
                 case 'modern':
-                    ctx.font = `${fontSize}px 'SSFaithfulness', 'Noto Serif KR', serif`;
+                    ctx.font = `${fontSize}px 'CallifontSamulnori-Medium', 'Noto Serif KR', serif`;
                     break;
                 case 'elegant':
-                    ctx.font = `${fontSize}px 'Nanum Brush Script', cursive`;
+                    ctx.font = `${fontSize}px 'SSRockRegular', 'Nanum Brush Script', cursive`;
                     break;
                 case 'classic':
                     ctx.font = `${fontSize}px 'SSFaithfulness', 'Noto Serif KR', serif`;
@@ -655,7 +665,8 @@ async function createCalligraphyCanvas(text, style) {
                     break;
                 case 'classic':
                     ctx.fillStyle = '#1a1a1a';
-                    ctx.strokeStyle = '#1a1a1a';
+                    ctx.fillText(line, canvas.width/2, y);
+                    addClassicBrushEffect(ctx, line, canvas.width/2, y, fontSize);
                     break;
             }
             // 텍스트를 줄바꿈으로 분리하고 숫자/첫글자/콜론 제거
@@ -706,8 +717,6 @@ async function createCalligraphyCanvas(text, style) {
                         addSmoothBrushEffect(ctx, line, canvas.width/2, y, fontSize);
                         break;
                     case 'classic':
-                        ctx.fillStyle = 'rgba(26, 26, 26, 0.2)';
-                        ctx.fillText(line, canvas.width/2 + 2, y + 2);
                         ctx.fillStyle = '#1a1a1a';
                         ctx.fillText(line, canvas.width/2, y);
                         addClassicBrushEffect(ctx, line, canvas.width/2, y, fontSize);
@@ -844,102 +853,28 @@ function createBackgroundPattern(style) {
                 const x = Math.random() * patternCanvas.width;
                 const y = Math.random() * patternCanvas.height;
                 const size = Math.random() * 1.5;
-                patternCtx.fillStyle = `rgba(0, 0, 0, ${Math.random() * 0.08})`;
+                patternCtx.fillStyle = `rgba(0, 0, 0, ${Math.random() * 0.1})`;
                 patternCtx.fillRect(x, y, size, size);
             }
-            
-            // 고전적인 테두리
-            patternCtx.strokeStyle = 'rgba(0, 0, 0, 0.15)';
-            patternCtx.lineWidth = 3;
-            patternCtx.strokeRect(8, 8, patternCanvas.width - 16, patternCanvas.height - 16);
             break;
     }
     
     return patternCtx.createPattern(patternCanvas, 'repeat');
 }
 
-// 캔버스 이미지 다운로드 함수
-function downloadCanvas(dataUrl, prefix) {
-    const link = document.createElement('a');
-    link.download = `${prefix}-${Date.now()}.png`;
-    link.href = dataUrl;
-    link.click();
-}
-
-// 미리보기 모달 관련 함수들
-function setupPreviewModal() {
-    const modal = document.getElementById('previewModal');
-    const closeBtn = modal.querySelector('.close-modal');
-    
-    // 모달 닫기
-    closeBtn.onclick = function() {
-        modal.classList.remove('show');
-    }
-    
-    // 모달 외부 클릭시 닫기
-    window.onclick = function(event) {
-        if (event.target === modal) {
-            modal.classList.remove('show');
-        }
-    }
-}
-
-// 이미지 미리보기 함수
-function showPreview(imageUrl) {
-    const modal = document.getElementById('previewModal');
-    const previewImage = document.getElementById('previewImage');
-    
-    previewImage.src = imageUrl;
-    modal.classList.add('show');
-}
-
-// 단계 전환 함수들
-function showStep1() {
-    document.getElementById('step1').style.display = 'block';
-    document.getElementById('step2').style.display = 'none';
-    document.querySelector('.results-section').style.display = 'none';
-    document.querySelector('.calligraphy-section').style.display = 'none';
-    
-    // OpenAI 인스턴스 초기화
-    openai = null;
-}
-
-function showStep2() {
-    document.getElementById('step1').style.display = 'none';
-    document.getElementById('step2').style.display = 'block';
-    
-    // 포커스를 이름 입력 필드로 이동
-    setTimeout(() => {
-        document.getElementById('name').focus();
-    }, 300);
-}
-
 // 커스텀 텍스트로 캘리그라피 생성 함수
-async function generateCustomCalligraphy(inputText) {
+async function generateCustomCalligraphy(text) {
     try {
-        // 텍스트 전처리: 쉼표나 줄바꿈으로 분리
-        let lines = [];
-        if (inputText.includes(',')) {
-            lines = inputText.split(',').map(line => line.trim()).filter(line => line.length > 0);
-        } else if (inputText.includes('\n')) {
-            lines = inputText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-        } else {
-            lines = [inputText];
-        }
-
-        // 텍스트 포맷팅 (번호 추가)
-        const formattedText = lines.map((line, index) => `${index + 1}\n${line}`).join('\n\n');
-
         // 로딩 상태 표시
         const calligraphyContainer = document.getElementById('calligraphyContainer');
         calligraphyContainer.innerHTML = `
             <div class="loading-container">
-                <h2 class="loading-title">커스텀 캘리그라피 생성 중...</h2>
+                <h2 class="loading-title">붓글씨 생성 중...</h2>
                 <div class="loading-progress">
                     <div class="loading-bar"></div>
                 </div>
                 <div class="loading-steps">
-                    <div class="loading-step active">캘리그라피 준비</div>
+                    <div class="loading-step active">붓글씨 생성 준비</div>
                     <div class="loading-step">전통 스타일 생성</div>
                     <div class="loading-step">현대 스타일 생성</div>
                     <div class="loading-step">세련된 스타일 생성</div>
@@ -968,16 +903,16 @@ async function generateCustomCalligraphy(inputText) {
         try {
             // 각 스타일별 캘리그라피 생성
             updateLoadingStep(1);
-            const traditionalCanvas = await createCalligraphyCanvas(formattedText, 'traditional');
+            const traditionalCanvas = await createCalligraphyCanvas(text, 'traditional');
             
             updateLoadingStep(2);
-            const modernCanvas = await createCalligraphyCanvas(formattedText, 'modern');
+            const modernCanvas = await createCalligraphyCanvas(text, 'modern');
             
             updateLoadingStep(3);
-            const elegantCanvas = await createCalligraphyCanvas(formattedText, 'elegant');
+            const elegantCanvas = await createCalligraphyCanvas(text, 'elegant');
             
             updateLoadingStep(4);
-            const classicCanvas = await createCalligraphyCanvas(formattedText, 'classic');
+            const classicCanvas = await createCalligraphyCanvas(text, 'classic');
 
             // 완료 단계 표시
             updateLoadingStep(5);
@@ -991,39 +926,39 @@ async function generateCustomCalligraphy(inputText) {
                             <img src="${traditionalCanvas.toDataURL()}" alt="전통 붓글씨" class="calligraphy-image">
                         </div>
                         <p class="calligraphy-text">전통 스타일</p>
-                        <button class="download-btn" onclick="downloadCanvas('${traditionalCanvas.toDataURL()}', 'custom-traditional-calligraphy')">이미지 저장하기</button>
+                        <button class="download-btn" onclick="downloadCanvas('${traditionalCanvas.toDataURL()}', 'traditional-calligraphy')">이미지 저장하기</button>
                     </div>
                     <div class="calligraphy-item">
                         <div class="calligraphy-image-container">
                             <img src="${modernCanvas.toDataURL()}" alt="현대 붓글씨" class="calligraphy-image">
                         </div>
                         <p class="calligraphy-text">현대 스타일</p>
-                        <button class="download-btn" onclick="downloadCanvas('${modernCanvas.toDataURL()}', 'custom-modern-calligraphy')">이미지 저장하기</button>
+                        <button class="download-btn" onclick="downloadCanvas('${modernCanvas.toDataURL()}', 'modern-calligraphy')">이미지 저장하기</button>
                     </div>
                     <div class="calligraphy-item">
                         <div class="calligraphy-image-container">
                             <img src="${elegantCanvas.toDataURL()}" alt="세련된 붓글씨" class="calligraphy-image">
                         </div>
                         <p class="calligraphy-text">세련된 스타일</p>
-                        <button class="download-btn" onclick="downloadCanvas('${elegantCanvas.toDataURL()}', 'custom-elegant-calligraphy')">이미지 저장하기</button>
+                        <button class="download-btn" onclick="downloadCanvas('${elegantCanvas.toDataURL()}', 'elegant-calligraphy')">이미지 저장하기</button>
                     </div>
                     <div class="calligraphy-item">
                         <div class="calligraphy-image-container">
                             <img src="${classicCanvas.toDataURL()}" alt="고전 붓글씨" class="calligraphy-image">
                         </div>
                         <p class="calligraphy-text">고전 스타일</p>
-                        <button class="download-btn" onclick="downloadCanvas('${classicCanvas.toDataURL()}', 'custom-classic-calligraphy')">이미지 저장하기</button>
+                        <button class="download-btn" onclick="downloadCanvas('${classicCanvas.toDataURL()}', 'classic-calligraphy')">이미지 저장하기</button>
                     </div>
                 </div>
-                <p class="calligraphy-text">${lines.join('<br>')}</p>
+                <p class="calligraphy-text">${text.split('\n').filter(line => line.trim()).map(line => line.replace(/^\d+\s*/, '').trim()).join('<br>')}</p>
             `;
 
         } catch (error) {
             clearInterval(timeInterval);
-            console.error('Error generating custom calligraphy:', error);
+            console.error('Error generating calligraphy:', error);
             calligraphyContainer.innerHTML = `
                 <div class="error">
-                    커스텀 캘리그라피 생성 중 오류가 발생했습니다.
+                    붓글씨 생성 중 오류가 발생했습니다.
                     <button class="back-btn" onclick="document.querySelector('.results-section').style.display = 'block'; document.querySelector('.calligraphy-section').style.display = 'none';">다시 시도하기</button>
                 </div>
             `;
@@ -1031,4 +966,4 @@ async function generateCustomCalligraphy(inputText) {
     } catch (error) {
         console.error('Error:', error);
     }
-} 
+}
