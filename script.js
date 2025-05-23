@@ -45,9 +45,14 @@ async function checkFontLoading() {
             await font.load();
             document.fonts.add(font);
             console.log('SSFlowerRoadRegular 폰트 로딩 성공');
+            
+            const faithfulnessFont = new FontFace('SSFaithfulness', 'url(./SSFaithfulness.ttf)');
+            await faithfulnessFont.load();
+            document.fonts.add(faithfulnessFont);
+            console.log('SSFaithfulness 폰트 로딩 성공');
         }
     } catch (error) {
-        console.warn('SSFlowerRoadRegular 폰트 로딩 실패, 대체 폰트 사용:', error);
+        console.warn('폰트 로딩 실패, 대체 폰트 사용:', error);
     }
 }
 
@@ -56,12 +61,10 @@ function setupEventListeners() {
     const apiKeyForm = document.getElementById('apiKeyForm');
     const nameForm = document.getElementById('nameForm');
     const createBtn = document.getElementById('createBtn');
-    const backToStep1Btn = document.getElementById('backToStep1');
     const resultsSection = document.querySelector('.results-section');
     const calligraphySection = document.querySelector('.calligraphy-section');
     const resultsGrid = document.getElementById('resultsGrid');
     const calligraphyContainer = document.getElementById('calligraphyContainer');
-    const backToPhrasesBtn = document.getElementById('backToPhrases');
     const customTextBtn = document.getElementById('customTextBtn');
     const customTextModal = document.getElementById('customTextModal');
     const customTextForm = document.getElementById('customTextForm');
@@ -174,15 +177,6 @@ function setupEventListeners() {
             createBtn.disabled = false;
             createBtn.textContent = '추천문구 생성하기';
         }
-    });
-
-    backToStep1Btn.addEventListener('click', () => {
-        showStep1();
-    });
-
-    backToPhrasesBtn.addEventListener('click', () => {
-        calligraphySection.style.display = 'none';
-        resultsSection.style.display = 'block';
     });
 
     // 캘리그라피 이미지 클릭 이벤트
@@ -640,7 +634,7 @@ async function createCalligraphyCanvas(text, style) {
                     ctx.font = `${fontSize}px 'Nanum Brush Script', cursive`;
                     break;
                 case 'classic':
-                    ctx.font = `${fontSize}px 'Noto Serif KR', serif`;
+                    ctx.font = `${fontSize}px 'SSFaithfulness', 'Noto Serif KR', serif`;
                     break;
             }
             ctx.textAlign = 'center';
