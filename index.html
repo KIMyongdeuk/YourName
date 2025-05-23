@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>너의이름은:예술이된다</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/UhBeeSeulvely.woff" rel="stylesheet" as="font" type="font/woff" crossorigin>
+    <script src="openai.js"></script>
+    <script>
+        // OpenAI 라이브러리 로딩 실패 시 처리
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Script error:', msg, 'at', url, ':', lineNo);
+            return false;
+        };
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>너의이름은:예술이된다</h1>
+        
+        <div class="input-section">
+            <form id="nameForm">
+                <div class="form-group">
+                    <label for="apiKey">OpenAI API 키를 입력하세요:</label>
+                    <input type="password" id="apiKey" name="apiKey" placeholder="sk-proj-..." required>
+                    <small style="color: #64748b; margin-top: 0.5rem; display: block;">
+                        API 키는 <a href="https://platform.openai.com/api-keys" target="_blank" style="color: var(--primary-color);">OpenAI 플랫폼</a>에서 발급받을 수 있습니다.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="name">이름을 입력하세요:</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="mood">분위기를 선택하세요:</label>
+                    <select id="mood" name="mood">
+                        <option value="감동적인">감동적인</option>
+                        <option value="재치있는">재치있는</option>
+                        <option value="로맨틱한">로맨틱한</option>
+                        <option value="유머러스한">유머러스한</option>
+                        <option value="시적인">시적인</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="language">언어를 선택하세요:</label>
+                    <select id="language" name="language">
+                        <option value="ko">한국어</option>
+                        <option value="en">영어</option>
+                        <option value="es">스페인어</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="create-btn" id="createBtn">추천문구 생성하기</button>
+            </form>
+        </div>
+
+        <div class="progress-bar-container" id="progressBarContainer" style="display:none;">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="results-section" style="display: none;">
+            <h2>추천 문구</h2>
+            <div class="results-grid" id="resultsGrid">
+                <!-- 문구 결과가 여기에 동적으로 추가됩니다 -->
+            </div>
+        </div>
+
+        <div class="calligraphy-section" style="display: none;">
+            <h2>캘리그라피 결과</h2>
+            <div class="calligraphy-container" id="calligraphyContainer">
+                <!-- 선택된 문구의 캘리그라피가 여기에 표시됩니다 -->
+            </div>
+            <button class="back-btn" id="backToPhrases">다른 문구 보기</button>
+        </div>
+    </div>
+
+    <!-- 미리보기 모달 -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <img id="previewImage" class="preview-image" src="" alt="미리보기">
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
