@@ -53,49 +53,69 @@ async function checkFontLoading() {
 
 // 이벤트 리스너 설정
 function setupEventListeners() {
+    const apiKeyForm = document.getElementById('apiKeyForm');
     const nameForm = document.getElementById('nameForm');
     const createBtn = document.getElementById('createBtn');
+    const backToStep1Btn = document.getElementById('backToStep1');
     const resultsSection = document.querySelector('.results-section');
     const calligraphySection = document.querySelector('.calligraphy-section');
     const resultsGrid = document.getElementById('resultsGrid');
     const calligraphyContainer = document.getElementById('calligraphyContainer');
     const backToPhrasesBtn = document.getElementById('backToPhrases');
 
-    // 폼 제출 이벤트 리스너
-    nameForm.addEventListener('submit', async (e) => {
+    // 1단계: API 키 입력 폼 제출
+    apiKeyForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        console.log('Form submitted');
+        console.log('API Key form submitted');
 
         const apiKey = document.getElementById('apiKey').value;
-        const name = document.getElementById('name').value;
-        const mood = document.getElementById('mood').value;
-        const language = document.getElementById('language').value;
-
+        
         if (!apiKey) {
             alert('OpenAI API 키를 입력해주세요.');
             return;
         }
+
+        // API 키 유효성 검사 및 OpenAI 초기화
+        const apiKeyBtn = document.getElementById('apiKeyBtn');
+        apiKeyBtn.disabled = true;
+        apiKeyBtn.textContent = '확인 중...';
+
+        try {
+            await initializeOpenAI(apiKey);
+            console.log('OpenAI initialized successfully');
+            
+            // 성공 시 2단계로 이동
+            showStep2();
+            
+        } catch (error) {
+            console.error('Failed to initialize OpenAI:', error);
+            alert('OpenAI 초기화에 실패했습니다. API 키를 확인해주세요.');
+        } finally {
+            apiKeyBtn.disabled = false;
+            apiKeyBtn.textContent = 'API 키 입력';
+        }
+    });
+
+    // 2단계: 이름 및 설정 폼 제출
+    nameForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        console.log('Name form submitted');
+
+        const name = document.getElementById('name').value;
+        const mood = document.getElementById('mood').value;
+        const language = document.getElementById('language').value;
 
         if (!name) {
             alert('이름을 입력해주세요.');
             return;
         }
 
-        console.log('Input values:', { name, mood, language });
-
-        // OpenAI 초기화
-        try {
-            await initializeOpenAI(apiKey);
-        } catch (error) {
-            console.error('Failed to initialize OpenAI:', error);
-            alert('OpenAI 초기화에 실패했습니다. API 키를 확인해주세요.');
-            return;
-        }
-
         if (!openai) {
-            alert('OpenAI가 초기화되지 않았습니다.');
+            alert('OpenAI가 초기화되지 않았습니다. 이전 단계로 돌아가서 다시 시도해주세요.');
             return;
         }
+
+        console.log('Input values:', { name, mood, language });
 
         // 버튼 비활성화 및 로딩 상태 표시
         createBtn.disabled = true;
@@ -149,6 +169,10 @@ function setupEventListeners() {
             createBtn.disabled = false;
             createBtn.textContent = '추천문구 생성하기';
         }
+    });
+
+    backToStep1Btn.addEventListener('click', () => {
+        showStep1();
     });
 
     backToPhrasesBtn.addEventListener('click', () => {
@@ -828,4 +852,25 @@ function showPreview(imageUrl) {
     
     previewImage.src = imageUrl;
     modal.classList.add('show');
+}
+
+// 단계 전환 함수들
+function showStep1() {
+    document.getElementById('step1').style.display = 'block';
+    document.getElementById('step2').style.display = 'none';
+    document.querySelector('.results-section').style.display = 'none';
+    document.querySelector('.calligraphy-section').style.display = 'none';
+    
+    // OpenAI 인스턴스 초기화
+    openai = null;
+}
+
+function showStep2() {
+    document.getElementById('step1').style.display = 'none';
+    document.getElementById('step2').style.display = 'block';
+    
+    // 포커스를 이름 입력 필드로 이동
+    setTimeout(() => {
+        document.getElementById('name').focus();
+    }, 300);
 } 

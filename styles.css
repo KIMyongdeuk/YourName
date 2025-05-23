@@ -92,6 +92,80 @@ select:focus {
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
+.form-step {
+    transition: all 0.5s ease;
+}
+
+.step-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.step-header h2 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.step-header p {
+    color: #64748b;
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.step-btn {
+    width: 100%;
+    padding: 1.2rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.step-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.step-buttons {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.step-buttons .back-btn {
+    flex: 1;
+    padding: 1.2rem;
+    background: #64748b;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.step-buttons .back-btn:hover {
+    background: #475569;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.step-buttons .create-btn {
+    flex: 2;
+}
+
 .create-btn {
     width: 100%;
     padding: 1.2rem;
@@ -454,6 +528,25 @@ select:focus {
     
     h1 {
         font-size: 2rem;
+    }
+
+    .step-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .step-header p {
+        font-size: 1rem;
+    }
+
+    .step-buttons {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .step-buttons .back-btn,
+    .step-buttons .create-btn {
+        flex: none;
+        width: 100%;
     }
     
     .calligraphy-grid {
