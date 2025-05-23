@@ -628,7 +628,7 @@ async function createCalligraphyCanvas(text, style) {
                     ctx.font = `${fontSize}px 'SSFlowerRoadRegular', 'UhBeeSeulvely', 'Nanum Brush Script', '나눔손글씨 붓', 'KoPub Batang', 'Noto Serif KR', serif`;
                     break;
                 case 'modern':
-                    ctx.font = `${fontSize}px 'Noto Serif KR', serif`;
+                    ctx.font = `${fontSize}px 'SSFaithfulness', 'Noto Serif KR', serif`;
                     break;
                 case 'elegant':
                     ctx.font = `${fontSize}px 'Nanum Brush Script', cursive`;
