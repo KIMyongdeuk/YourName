@@ -665,8 +665,7 @@ async function createCalligraphyCanvas(text, style) {
                     break;
                 case 'classic':
                     ctx.fillStyle = '#1a1a1a';
-                    ctx.fillText(line, canvas.width/2, y);
-                    addClassicBrushEffect(ctx, line, canvas.width/2, y, fontSize);
+                    ctx.strokeStyle = '#1a1a1a';
                     break;
             }
             // 텍스트를 줄바꿈으로 분리하고 숫자/첫글자/콜론 제거
