@@ -49,6 +49,24 @@ python -m http.server 8000
 - **사용량 모니터링**: OpenAI API 사용량과 비용을 주기적으로 확인하세요
 - **브라우저 호환성**: 최신 브라우저에서 사용을 권장합니다
 
+## 🔧 폰트 문제 해결
+
+### SSFlowerRoadRegular.ttf 폰트가 적용되지 않는 경우:
+
+**해결법 1: 폰트 변환 (권장)**
+1. [CloudConvert](https://cloudconvert.com/ttf-to-woff2) 등에서 TTF → WOFF2 변환
+2. 변환된 파일로 교체
+3. CSS에서 `format('woff2')` 사용
+
+**해결법 2: 대체 폰트 사용**
+- 현재 설정된 폴백 폰트들이 자동으로 적용됩니다
+- UhBeeSeulvely, Nanum Brush Script 등이 사용됩니다
+
+**해결법 3: 웹 폰트 서비스 사용**
+```css
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Brush+Script&display=swap');
+```
+
 ## 📜 라이선스
 
 MIT License

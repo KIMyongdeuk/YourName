@@ -1,8 +1,9 @@
 @font-face {
     font-family: 'SSFlowerRoadRegular';
-    src: url('SSFlowerRoadRegular.ttf') format('truetype');
+    src: url('./SSFlowerRoadRegular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
+    font-display: swap;
 }
 
 * {

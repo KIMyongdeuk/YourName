@@ -29,8 +29,27 @@ async function initializeOpenAI(apiKey) {
 // 페이지 로드 시 초기화
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('DOM loaded, setting up event listeners...');
+    
+    // 폰트 로딩 확인
+    await checkFontLoading();
+    
     setupEventListeners();
 });
+
+// 폰트 로딩 확인 함수
+async function checkFontLoading() {
+    try {
+        // FontFace API를 사용하여 폰트 로딩 확인
+        if ('fonts' in document) {
+            const font = new FontFace('SSFlowerRoadRegular', 'url(./SSFlowerRoadRegular.ttf)');
+            await font.load();
+            document.fonts.add(font);
+            console.log('SSFlowerRoadRegular 폰트 로딩 성공');
+        }
+    } catch (error) {
+        console.warn('SSFlowerRoadRegular 폰트 로딩 실패, 대체 폰트 사용:', error);
+    }
+}
 
 // 이벤트 리스너 설정
 function setupEventListeners() {
@@ -471,6 +490,9 @@ async function createCalligraphyCanvas(text, style) {
         canvas.width = 1200;
         canvas.height = 600;
 
+        // 폰트 로딩 상태 확인
+        console.log('Available fonts:', Array.from(document.fonts.values()).map(f => f.family));
+        
         // 항상 패턴 배경만 사용
         const bgPattern = createBackgroundPattern(style);
         ctx.fillStyle = bgPattern;
@@ -495,7 +517,7 @@ async function createCalligraphyCanvas(text, style) {
                 let y = 180;
                 lines.forEach((line, i) => {
                     const fontSize = 50 + Math.floor(Math.random() * 15) - 7;
-                    ctx.font = `bold ${fontSize}px 'SSFlowerRoadRegular', 'UhBeeSeulvely', 'Nanum Brush Script', cursive`;
+                    ctx.font = `bold ${fontSize}px 'SSFlowerRoadRegular', 'UhBeeSeulvely', 'Nanum Brush Script', '나눔손글씨 붓', 'KoPub Batang', 'Noto Serif KR', serif`;
                     ctx.fillStyle = '#222';
                     ctx.textAlign = 'center';
                     ctx.textBaseline = 'middle';
@@ -540,7 +562,7 @@ async function createCalligraphyCanvas(text, style) {
             // 스타일에 따른 폰트 설정
             switch(style) {
                 case 'traditional':
-                    ctx.font = `${fontSize}px 'SSFlowerRoadRegular', 'Nanum Brush Script', cursive`;
+                    ctx.font = `${fontSize}px 'SSFlowerRoadRegular', 'UhBeeSeulvely', 'Nanum Brush Script', '나눔손글씨 붓', 'KoPub Batang', 'Noto Serif KR', serif`;
                     break;
                 case 'modern':
                     ctx.font = `${fontSize}px 'Noto Serif KR', serif`;
