@@ -628,4 +628,157 @@ select:focus {
     width: 0%;
     background: linear-gradient(90deg, #60a5fa, #818cf8);
     transition: width 0.2s;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.custom-btn {
+    padding: 1rem 2rem;
+    background: #8b5cf6;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.custom-btn:hover {
+    background: #7c3aed;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.custom-modal {
+    background: white;
+    border-radius: 20px;
+    padding: 2rem;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.modal-header h3 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.modal-header p {
+    color: #64748b;
+    font-size: 1rem;
+    margin: 0;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 1.5rem;
+}
+
+.cancel-btn {
+    padding: 0.8rem 1.5rem;
+    background: #64748b;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background: #475569;
+}
+
+.generate-btn {
+    padding: 0.8rem 1.5rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-md);
+}
+
+.generate-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+textarea {
+    width: 100%;
+    padding: 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    resize: vertical;
+    min-height: 80px;
+    transition: all 0.3s ease;
+    background: var(--secondary-color);
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+.step-buttons .back-btn,
+.step-buttons .create-btn {
+    flex: none;
+    width: 100%;
+}
+
+.action-buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.action-buttons .back-btn,
+.action-buttons .custom-btn {
+    width: 100%;
+}
+
+.modal-buttons {
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.modal-buttons .cancel-btn,
+.modal-buttons .generate-btn {
+    width: 100%;
+}
+
+.custom-modal {
+    padding: 1.5rem;
+    margin: 1rem;
+}
+
+.calligraphy-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
 } 
