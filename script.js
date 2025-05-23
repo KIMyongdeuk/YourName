@@ -718,7 +718,6 @@ async function createCalligraphyCanvas(text, style) {
                     case 'classic':
                         ctx.fillStyle = '#1a1a1a';
                         ctx.fillText(line, canvas.width/2, y);
-                        addClassicBrushEffect(ctx, line, canvas.width/2, y, fontSize);
                         break;
                 }
             });
@@ -760,21 +759,6 @@ function addSmoothBrushEffect(ctx, text, x, y, fontSize) {
     ctx.fillText(text, x, y);
 }
 
-// 고전적인 붓 터치 효과 추가 함수
-function addClassicBrushEffect(ctx, text, x, y, fontSize) {
-    const metrics = ctx.measureText(text);
-    const width = metrics.width;
-    
-    // 고전적인 붓 터치 추가
-    for (let i = 0; i < 3; i++) {
-        const offsetX = (Math.random() - 0.5) * width * 0.05;
-        const offsetY = (Math.random() - 0.5) * fontSize * 0.05;
-        
-        ctx.fillStyle = 'rgba(26, 26, 26, 0.1)';
-        ctx.fillText(text, x + offsetX, y + offsetY);
-    }
-}
-
 // 배경 패턴 생성 함수
 function createBackgroundPattern(style) {
     const patternCanvas = document.createElement('canvas');
@@ -785,57 +769,83 @@ function createBackgroundPattern(style) {
     
     switch(style) {
         case 'traditional':
-            // 전통 스타일 배경: 한지 느낌
-            patternCtx.fillStyle = '#f8f4e8';
+            // 전통 스타일 배경: 자연스러운 한지 텍스처
+            patternCtx.fillStyle = '#f9f6f0';
             patternCtx.fillRect(0, 0, patternCanvas.width, patternCanvas.height);
             
-            // 한지 질감 추가
-            for (let i = 0; i < 1000; i++) {
+            // 한지 섬유질 효과
+            for (let i = 0; i < 2000; i++) {
                 const x = Math.random() * patternCanvas.width;
                 const y = Math.random() * patternCanvas.height;
-                const size = Math.random() * 2;
-                patternCtx.fillStyle = `rgba(0, 0, 0, ${Math.random() * 0.1})`;
-                patternCtx.fillRect(x, y, size, size);
+                const length = Math.random() * 8 + 2;
+                const angle = Math.random() * Math.PI * 2;
+                
+                patternCtx.strokeStyle = `rgba(220, 200, 180, ${Math.random() * 0.3})`;
+                patternCtx.lineWidth = Math.random() * 0.5 + 0.2;
+                patternCtx.beginPath();
+                patternCtx.moveTo(x, y);
+                patternCtx.lineTo(x + Math.cos(angle) * length, y + Math.sin(angle) * length);
+                patternCtx.stroke();
             }
             
-            // 테두리 효과
-            patternCtx.strokeStyle = 'rgba(0, 0, 0, 0.1)';
-            patternCtx.lineWidth = 2;
-            patternCtx.strokeRect(5, 5, patternCanvas.width - 10, patternCanvas.height - 10);
+            // 한지 얼룩 효과
+            for (let i = 0; i < 50; i++) {
+                const x = Math.random() * patternCanvas.width;
+                const y = Math.random() * patternCanvas.height;
+                const size = Math.random() * 15 + 5;
+                
+                patternCtx.fillStyle = `rgba(230, 210, 190, ${Math.random() * 0.2})`;
+                patternCtx.beginPath();
+                patternCtx.arc(x, y, size, 0, Math.PI * 2);
+                patternCtx.fill();
+            }
             break;
             
         case 'modern':
-            // 현대 스타일 배경: 미니멀한 그라데이션
-            const gradient = patternCtx.createLinearGradient(0, 0, patternCanvas.width, patternCanvas.height);
-            gradient.addColorStop(0, '#ffffff');
-            gradient.addColorStop(1, '#f0f0f0');
-            patternCtx.fillStyle = gradient;
+            // 현대 스타일 배경: 깔끔한 단색 (순백색)
+            patternCtx.fillStyle = '#ffffff';
             patternCtx.fillRect(0, 0, patternCanvas.width, patternCanvas.height);
             
-            // 미세한 패턴 추가
-            for (let i = 0; i < 500; i++) {
+            // 매우 미세한 노이즈만 추가 (거의 보이지 않음)
+            for (let i = 0; i < 100; i++) {
                 const x = Math.random() * patternCanvas.width;
                 const y = Math.random() * patternCanvas.height;
-                const size = Math.random() * 1.5;
-                patternCtx.fillStyle = `rgba(0, 0, 0, ${Math.random() * 0.05})`;
-                patternCtx.fillRect(x, y, size, size);
+                patternCtx.fillStyle = `rgba(245, 245, 245, ${Math.random() * 0.3})`;
+                patternCtx.fillRect(x, y, 1, 1);
             }
             break;
             
         case 'elegant':
-            // 세련된 스타일 배경: 부드러운 그라데이션
-            const elegantGradient = patternCtx.createLinearGradient(0, 0, patternCanvas.width, patternCanvas.height);
-            elegantGradient.addColorStop(0, '#fafafa');
-            elegantGradient.addColorStop(1, '#f0f0f0');
-            patternCtx.fillStyle = elegantGradient;
+            // 세련된 스타일 배경: 대리석 패턴
+            patternCtx.fillStyle = '#f8f8f8';
             patternCtx.fillRect(0, 0, patternCanvas.width, patternCanvas.height);
             
-            // 세련된 패턴 추가
-            for (let i = 0; i < 300; i++) {
+            // 대리석 베인 (정맥) 효과
+            for (let i = 0; i < 8; i++) {
+                const startX = Math.random() * patternCanvas.width;
+                const startY = Math.random() * patternCanvas.height;
+                
+                patternCtx.strokeStyle = `rgba(200, 200, 200, ${Math.random() * 0.4 + 0.1})`;
+                patternCtx.lineWidth = Math.random() * 3 + 1;
+                patternCtx.beginPath();
+                patternCtx.moveTo(startX, startY);
+                
+                // 곡선 베인 그리기
+                for (let j = 0; j < 20; j++) {
+                    const x = startX + (Math.random() - 0.5) * 200;
+                    const y = startY + j * 10 + (Math.random() - 0.5) * 20;
+                    patternCtx.lineTo(x, y);
+                }
+                patternCtx.stroke();
+            }
+            
+            // 대리석 점들
+            for (let i = 0; i < 200; i++) {
                 const x = Math.random() * patternCanvas.width;
                 const y = Math.random() * patternCanvas.height;
-                const size = Math.random() * 3;
-                patternCtx.fillStyle = `rgba(0, 0, 0, ${Math.random() * 0.03})`;
+                const size = Math.random() * 2;
+                
+                patternCtx.fillStyle = `rgba(180, 180, 180, ${Math.random() * 0.3})`;
                 patternCtx.beginPath();
                 patternCtx.arc(x, y, size, 0, Math.PI * 2);
                 patternCtx.fill();
@@ -843,18 +853,50 @@ function createBackgroundPattern(style) {
             break;
             
         case 'classic':
-            // 고전 스타일 배경: 옛날 종이 느낌
-            patternCtx.fillStyle = '#f5f0e1';
+            // 고전 스타일 배경: 오래된 양피지
+            patternCtx.fillStyle = '#f5f1e8';
             patternCtx.fillRect(0, 0, patternCanvas.width, patternCanvas.height);
             
-            // 고전적인 질감 추가
-            for (let i = 0; i < 1500; i++) {
+            // 양피지 나이 얼룩
+            for (let i = 0; i < 30; i++) {
                 const x = Math.random() * patternCanvas.width;
                 const y = Math.random() * patternCanvas.height;
-                const size = Math.random() * 1.5;
-                patternCtx.fillStyle = `rgba(0, 0, 0, ${Math.random() * 0.1})`;
-                patternCtx.fillRect(x, y, size, size);
+                const size = Math.random() * 25 + 10;
+                
+                const gradient = patternCtx.createRadialGradient(x, y, 0, x, y, size);
+                gradient.addColorStop(0, `rgba(210, 180, 140, ${Math.random() * 0.2})`);
+                gradient.addColorStop(1, 'rgba(210, 180, 140, 0)');
+                
+                patternCtx.fillStyle = gradient;
+                patternCtx.beginPath();
+                patternCtx.arc(x, y, size, 0, Math.PI * 2);
+                patternCtx.fill();
             }
+            
+            // 양피지 주름 효과
+            for (let i = 0; i < 15; i++) {
+                const startX = Math.random() * patternCanvas.width;
+                const startY = Math.random() * patternCanvas.height;
+                const endX = startX + (Math.random() - 0.5) * 100;
+                const endY = startY + (Math.random() - 0.5) * 100;
+                
+                patternCtx.strokeStyle = `rgba(200, 170, 130, ${Math.random() * 0.2})`;
+                patternCtx.lineWidth = Math.random() * 1.5 + 0.5;
+                patternCtx.beginPath();
+                patternCtx.moveTo(startX, startY);
+                patternCtx.quadraticCurveTo(
+                    startX + (Math.random() - 0.5) * 50,
+                    startY + (Math.random() - 0.5) * 50,
+                    endX,
+                    endY
+                );
+                patternCtx.stroke();
+            }
+            
+            // 테두리 에이징 효과
+            patternCtx.strokeStyle = 'rgba(180, 150, 110, 0.3)';
+            patternCtx.lineWidth = 2;
+            patternCtx.strokeRect(5, 5, patternCanvas.width - 10, patternCanvas.height - 10);
             break;
     }
     
