@@ -331,7 +331,7 @@ async function generatePhrases(name, mood, language) {
         }
 
         const response = await openai.createChatCompletion({
-            model: "gpt-4o",
+            model: "gpt-4",
             messages: [
                 {
                     role: "system",
